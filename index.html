@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-amber.min.css" />
     <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
     <style>
+.mdl-layout__content {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
 #timeContainer {
   position: fixed;
     top: 50%;
@@ -28,6 +31,16 @@
 } 
 #time-millis {
   font-size: 5vw;
+}
+#pauseBtn {
+  position: absolute;
+  right: 15%;
+  bottom: 5%;
+}
+#resumeBtn {
+  position: absolute;
+  right: 10%;
+  bottom: 5%;
 }
 #startBtn {
   position: absolute;
@@ -68,6 +81,12 @@
           </div>
           <button id="startBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
             <i class="material-icons">&#xE037;</i>
+          </button>
+          <button id="resumeBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
+            resume
+          </button>
+          <button id="pauseBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
+            pause
           </button>
         </div>
       </div>
