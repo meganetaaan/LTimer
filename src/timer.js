@@ -53,8 +53,10 @@ function loop(){
   renderer.render(status);
   if(status <= 0){
     console.log('finished!');
+    stop();
+  } else {
+    timeout = nextFrame(loop);
   }
-  timeout = nextFrame(loop);
 }
 
 exports.timer = {
