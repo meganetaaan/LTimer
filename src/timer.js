@@ -20,18 +20,19 @@ function setInterval(time){
   interval = time;
 }
 
-function start(){
+function start(interval){
+  const itvl = interval ? interval : DEFAULT_INTERVAL;
+  setInterval(itvl);
   startTime = Date.now();
   timeout = nextFrame(loop, 0);
   return status;
 }
 
-/* start, stopと一緒？
 function pause(){
+  interval = status;
   cancelFrame(timeout);
   return status;
 }
-*/
 
 function resume(){
   startTime = Date.now();
@@ -48,7 +49,7 @@ function stop(){
 function loop(){
   const current = new Date().getTime();
   const passed = current - startTime;
-  const status = Math.max(interval - passed, 0);
+  status = Math.max(interval - passed, 0);
   renderer.render(status);
   if(status <= 0){
     console.log('finished!');
@@ -58,6 +59,8 @@ function loop(){
 
 exports.timer = {
   start,
+  pause,
+  resume,
   stop,
   setRenderer,
   setRenderCallback,

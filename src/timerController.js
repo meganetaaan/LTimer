@@ -19,7 +19,7 @@ const timerController = {
   _timer: null,
   __ready: function(context){
     this._timer = require('./timer.js');
-    console.log('hoge');
+    this._timer.timer.setRenderer(renderer);
   },
 
   _render: function(time, $target){
@@ -27,10 +27,19 @@ const timerController = {
   },
 
   '#startBtn click': function(context, $el) {
-    var $target = this.$find('#timer');
-    this._timer.timer.setRenderer(renderer);
     this._timer.timer.start();
-    console.log('clicked');
+  },
+
+  '#pauseBtn click': function(context, $el) {
+    this._timer.timer.pause();
+  },
+
+  '#resumeBtn click': function(context, $el) {
+    this._timer.timer.resume();
+  },
+
+  '#stopBtn click': function(context, $el) {
+    this._timer.timer.stop();
   }
 }
 
