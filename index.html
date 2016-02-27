@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <title></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-amber.min.css" />
+    <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+    <style>
+#timeContainer {
+  position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+  left: 15vw;
+  height: 25vw;
+  width: 75vw;
+}
+#timeStr {
+  line-height: 25vw;
+}
+#time {
+  font-size: 25vw;
+} 
+#time-millis {
+  font-size: 5vw;
+}
+#startBtn {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+}
+    </style>
+  </head>
+  <body>
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">Title</span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <a class="mdl-navigation__link" href="https://www.htmlhifive.com">hifive</a>
+          </nav>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Title</span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="#">Link</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+      <div class="page-content">
+        <div id="timer">
+          <div id="timeContainer">
+          <span id="timeStr">
+          <span id="time">05:00</span>
+          <span id="time-millis">.000</span>
+          </span>
+          </div>
+          <button id="startBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
+            <i class="material-icons">&#xE037;</i>
+          </button>
+        </div>
+      </div>
+      </main>
+    </div>
+  <script src="./node_modules/jquery/dist/jquery.js"></script>
+  <script src="./dist/index.js"></script>
+  </body>
+</html>

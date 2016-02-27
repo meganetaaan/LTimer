@@ -1,0 +1,34 @@
+{
+  "name": "ltimer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "material-design-lite": "^1.1.1"
+  },
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "browserify-shim": "^3.8.12",
+    "globby": "^4.0.0",
+    "gulp": "^3.9.1",
+    "gulp-webserver": "^0.9.1",
+    "through2": "^2.0.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "browser":{
+    "hifive": "./lib/hifive/h5-1.2.1.dev.js",
+    "jquery": "./node_modules/jquery/dist/jquery.js"
+  },
+  "browserify-shim": {
+    "jquery": "jQuery",
+    "hifive": {"depends": ["jquery:jQuery" ]}
+  }
+}
