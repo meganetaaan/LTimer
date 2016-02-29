@@ -23,12 +23,16 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
-  "browser":{
+  "browser": {
     "hifive": "./lib/hifive/h5-1.2.1.dev.js",
     "jquery": "./node_modules/jquery/dist/jquery.js"
   },
   "browserify-shim": {
     "jquery": "jQuery",
-    "hifive": {"depends": ["jquery:jQuery" ]}
+    "hifive": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    }
   }
 }

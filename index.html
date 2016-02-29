@@ -9,11 +9,12 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <title></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-amber.min.css" />
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.pink-light_green.min.css" />
     <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
     <style>
 .mdl-layout__content {
   font-family: "Roboto","Helvetica","Arial",sans-serif;
+  background-color: #FAFAFA;
 }
 #timeContainer {
   position: fixed;
@@ -32,20 +33,48 @@
 #time-millis {
   font-size: 5vw;
 }
-#pauseBtn {
-  position: absolute;
-  right: 15%;
-  bottom: 5%;
-}
-#resumeBtn {
-  position: absolute;
-  right: 10%;
-  bottom: 5%;
+@keyframes zoomin {
+  from {
+    transform: translateX(-50%) scale(0) rotate(180deg);
+  }
+  to {
+    transform: translateX(-50%) scale(1) rotate(0deg);
+  }
 }
 #startBtn {
   position: absolute;
-  right: 5%;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 5%;
+}
+#pauseBtn {
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
+#stopBtn{
+  display: none;
+  position: absolute;
+  left: calc(50% + 60px);
+  transform: translateX(-50%);
+  bottom: 5%;
+  animation-duration: 0.2s;
+  animation-name: zoomin;
+}
+.page-content{
+  position: absolute;
+  background-color: #424242;
+  color: #fafafa;
+  width: 100%;
+  height: 100%;
+}
+.page-content .warn {
+  color: #FFEB3B;
+}
+.page-content .danger {
+  color: #FF5722;
 }
     </style>
   </head>
@@ -82,11 +111,11 @@
           <button id="startBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
             <i class="material-icons">&#xE037;</i>
           </button>
-          <button id="resumeBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
-            resume
-          </button>
           <button id="pauseBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
-            pause
+            <i class="material-icons">&#xE034;</i>
+          </button>
+          <button id="stopBtn" class="mdl-button mdl-js-button mdl-button--mini-fab mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
+            <i class="material-icons">&#xE047;</i>
           </button>
         </div>
       </div>
