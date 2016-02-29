@@ -21,9 +21,9 @@ const onStartCallback = (function($content){
 })($content)
 const onSecondCallback = (function($con){
   return function(time){
-    if(time < 15000){
+    if(time <= 15){
       $con.removeClass('warn danger').addClass('danger');
-    } else if(time < 30000){
+    } else if(time <= 30){
       $con.removeClass('warn danger').addClass('warn');
     }
   }
