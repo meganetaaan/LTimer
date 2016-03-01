@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify -t babelify ./src/index.js -o ./dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
     "material-design-lite": "^1.1.1"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.6.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "browserify-shim": "^3.8.12",
@@ -21,11 +23,15 @@
     "gulp-webserver": "^0.9.1",
     "through2": "^2.0.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "browserify": {
+    "transform": ["browserify-shim"]
   },
   "browser": {
-    "hifive": "./lib/hifive/h5-1.2.1.dev.js",
-    "jquery": "./node_modules/jquery/dist/jquery.js"
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "hifive": "./lib/hifive/h5.dev.js"
   },
   "browserify-shim": {
     "jquery": "jQuery",
