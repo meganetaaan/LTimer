@@ -7541,7 +7541,7 @@ return value!=null&&value!=='';}, /**
 		 * @param {number} max 最大値
 		 * @param {boolean} [inclusive=false] 境界値にmaxValueを含めるかどうか
 		 * @returns {boolean}
-		 */max:function max(value,max,inclusive){return value==null||(isNumberValue(value,true)||value instanceof Number)&&(inclusive?value<=max:value<max);}, /**
+		 */max:function max(value,maxVal,inclusive){return value==null||(isNumberValue(value,true)||value instanceof Number)&&(inclusive?value<=maxVal:value<maxVal);}, /**
 		 * 値が最小値より大きいかどうか判定し、判定結果をtrueまたはfalseで返します
 		 * <p>
 		 * 第2引数には最小値を指定して、その数値より大きいかどうか判定します。
@@ -12222,8 +12222,6 @@ if(h5.settings.scene.autoInit){init();}}); // =============================
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"/Users/ishikawa/Works/webapps/ltimer/node_modules/jquery/dist/jquery.js":2}],2:[function(require,module,exports){
-(function (global){
-; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/
@@ -22056,11 +22054,6 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-; browserify_shim__define__module__export__(typeof jQuery != "undefined" ? jQuery : window.jQuery);
-
-}).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 'use strict';
 
