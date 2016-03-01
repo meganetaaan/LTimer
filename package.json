@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jquery": "^2.2.1",
     "material-design-lite": "^1.1.1"
   },
   "devDependencies": {
@@ -27,7 +28,9 @@
     "watchify": "^3.7.0"
   },
   "browserify": {
-    "transform": ["browserify-shim"]
+    "transform": [
+      "browserify-shim"
+    ]
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
