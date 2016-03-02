@@ -12222,6 +12222,8 @@ if(h5.settings.scene.autoInit){init();}}); // =============================
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"/Users/ishikawa/Works/webapps/ltimer/node_modules/jquery/dist/jquery.js":2}],2:[function(require,module,exports){
+(function (global){
+; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/
@@ -22054,6 +22056,11 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
+; browserify_shim__define__module__export__(typeof jQuery != "undefined" ? jQuery : window.jQuery);
+
+}).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -22087,180 +22094,198 @@ require('./timerController');
 },{"../lib/hifive/h5.dev.js":1,"./timer":5,"./timerController":6,"jquery":2}],5:[function(require,module,exports){
 'use strict';
 
-var DEFAULT_INTERVAL = 300000;
-var interval = DEFAULT_INTERVAL;
-var startTime = 0;
-var status = interval;
-var lastStatus = interval;
-var timeout = null;
-var render = function render(timer) {};
-var renderer = { render: function render() {} };
-var onSecondCallback = function onSecondCallback(second) {};
-var onStartCallback = function onStartCallback(second) {};
-var onStopCallback = function onStopCallback() {};
-var nextFrame = window ? window.requestAnimationFrame : setImmediate;
-var cancelFrame = window ? window.cancelAnimationFrame : cancelImmediate;
+(function () {
+  'use strict';
 
-function setRenderer(_renderer) {
-  renderer = _renderer;
-}
+  var DEFAULT_INTERVAL = 300000;
+  var limit = DEFAULT_INTERVAL;
+  var interval = DEFAULT_INTERVAL;
+  var startTime = 0;
+  var lastStoppedTime = interval;
+  var status = interval;
+  var lastStatus = interval;
+  var timeout = null;
+  var render = function render(timer) {};
+  var renderer = { render: function render() {} };
+  var onSecondCallback = function onSecondCallback(second) {};
+  var onStartCallback = function onStartCallback(second) {};
+  var onStopCallback = function onStopCallback() {};
+  var nextFrame = window ? window.requestAnimationFrame : setImmediate;
+  var cancelFrame = window ? window.cancelAnimationFrame : cancelImmediate;
 
-function setOnSecondCallback(callback) {
-  onSecondCallback = callback;
-}
-
-function setOnStartCallback(callback) {
-  onStopCallback = callback;
-}
-
-function setOnStopCallback(callback) {
-  onStopCallback = callback;
-}
-
-function setRenderCallback(callback) {
-  render = callback;
-}
-
-function setInterval(time) {
-  interval = time;
-  render(interval);
-}
-
-function start() {
-  startTime = Date.now();
-  lastStatus = startTime;
-  timeout = nextFrame(loop, 0);
-  return status;
-}
-
-function pause() {
-  interval = status;
-  cancelFrame(timeout);
-  return status;
-}
-
-function resume() {
-  startTime = Date.now();
-  timeout = nextFrame(loop, 0);
-  return status;
-}
-
-function stop() {
-  status = 0;
-  cancelFrame(timeout);
-  renderer.render(status);
-  onStopCallback();
-  return status;
-}
-
-function loop() {
-  lastStatus = status;
-  var current = new Date().getTime();
-  var passed = current - startTime;
-  status = Math.max(interval - passed, 0);
-  renderer.render(status);
-  if (Math.floor(status / 1000) !== Math.floor(lastStatus / 1000)) {
-    onSecondCallback(Math.floor(lastStatus / 1000));
+  function setRenderer(_renderer) {
+    renderer = _renderer;
   }
-  if (status <= 0) {
-    console.log('finished!');
-    stop();
-  } else {
-    timeout = nextFrame(loop);
-  }
-}
 
-exports.timer = {
-  start: start,
-  pause: pause,
-  resume: resume,
-  stop: stop,
-  setRenderer: setRenderer,
-  setRenderCallback: setRenderCallback,
-  setOnStopCallback: setOnStopCallback,
-  setOnSecondCallback: setOnSecondCallback,
-  setInterval: setInterval
-};
+  function setOnSecondCallback(callback) {
+    onSecondCallback = callback;
+  }
+
+  function setOnStartCallback(callback) {
+    onStopCallback = callback;
+  }
+
+  function setOnStopCallback(callback) {
+    onStopCallback = callback;
+  }
+
+  function setRenderCallback(callback) {
+    render = callback;
+  }
+
+  function reset(time) {
+    if (time) {
+      limit = time;
+    }
+    status = interval = limit;
+    renderer.render(limit);
+  }
+
+  function start() {
+    if (status <= 0) {
+      return;
+    }
+    startTime = Date.now();
+    lastStatus = startTime;
+    timeout = nextFrame(loop, 0);
+    return status;
+  }
+
+  function pause() {
+    interval = status;
+    cancelFrame(timeout);
+    return status;
+  }
+
+  function stop() {
+    status = 0;
+    cancelFrame(timeout);
+    renderer.render(status);
+    onStopCallback();
+    return status;
+  }
+
+  function loop() {
+    lastStatus = status;
+    var current = new Date().getTime();
+    var passed = current - startTime;
+    status = Math.max(interval - passed, 0);
+    renderer.render(status);
+    if (Math.floor(status / 1000) !== Math.floor(lastStatus / 1000)) {
+      onSecondCallback(Math.floor(lastStatus / 1000));
+    }
+    if (status <= 0) {
+      stop();
+    } else {
+      timeout = nextFrame(loop);
+    }
+  }
+
+  module.exports = {
+    start: start,
+    pause: pause,
+    stop: stop,
+    reset: reset,
+    setRenderer: setRenderer,
+    setRenderCallback: setRenderCallback,
+    setOnStopCallback: setOnStopCallback,
+    setOnSecondCallback: setOnSecondCallback
+  };
+})();
 
 },{}],6:[function(require,module,exports){
 'use strict';
 
-var $targetTime = $('#time');
-var $targetMsec = $('#time-millis');
-var $content = $('.page-content');
+(function ($) {
+  /* global h5, window */
+  'use strict';
+  // TODO: jQueryオブジェクトのキャッシュを集約する(コントローラ内が望ましい？）
 
-var renderer = {
-  formatter: require('./formatter.js'),
-  $targets: {
-    $time: $targetTime,
-    $msec: $targetMsec
-  },
-  render: function render(time) {
-    this.$targets.$time.text(this.formatter.formatTimeString(time));
-    this.$targets.$msec.text(this.formatter.formatMsecString(time));
-  }
-};
+  var $targetTime = $('#time');
+  var $targetMsec = $('#time-millis');
+  var $content = $('.page-content');
 
-var formatter = require('./formatter.js');
-var onStartCallback = function ($content) {
-  $content.removeClass('warn danger');
-}($content);
-var onSecondCallback = function ($con) {
-  return function (time) {
-    if (time <= 15) {
-      $con.removeClass('warn danger').addClass('danger');
-    } else if (time <= 30) {
-      $con.removeClass('warn danger').addClass('warn');
+  var renderer = {
+    formatter: require('./formatter.js'),
+    $targets: {
+      $time: $targetTime,
+      $msec: $targetMsec
+    },
+    render: function render(time) {
+      this.$targets.$time.text(this.formatter.formatTimeString(time));
+      this.$targets.$msec.text(this.formatter.formatMsecString(time));
     }
   };
-}($content);
-var onStopCallback = function ($time, $msec) {
-  return function () {
-    $msec.empty();
-    $time.text('DONE!');
+
+  var onStartCallback = function ($content) {
+    $content.removeClass('warn danger');
+  }($content);
+  var onSecondCallback = function ($con) {
+    return function (time) {
+      if (time <= 15) {
+        $con.removeClass('warn danger').addClass('danger');
+      } else if (time <= 30) {
+        $con.removeClass('warn danger').addClass('warn');
+      }
+    };
+  }($content);
+  var onStopCallback = function ($time, $msec) {
+    return function () {
+      $('#resetBtn').show();
+      $('#pauseBtn').hide();
+      $('#startBtn').hide();
+      $msec.empty();
+      $time.text('DONE!');
+    };
+  }($targetTime, $targetMsec, $content);
+
+  var timerController = {
+    __name: 'ltimer.controller.timerController',
+    _timer: null,
+    __ready: function __ready(context) {
+      this._timer = require('./timer.js');
+      this._timer.setRenderer(renderer);
+      this._timer.setOnSecondCallback(onSecondCallback);
+      this._timer.setOnStopCallback(onStopCallback);
+      this._timer.reset(300000);
+    },
+
+    _render: function _render(time, $target) {
+      $target.text(this._formatter.formatTimeString(time));
+    },
+
+    '#startBtn click': function startBtn_click(context, $el) {
+      this.$find('#startBtn').hide();
+      this.$find('#pauseBtn').show();
+      this.$find('#stopBtn').show();
+      this._timer.start();
+    },
+
+    '#pauseBtn click': function pauseBtn_click(context, $el) {
+      this.$find('#pauseBtn').hide();
+      this.$find('#stopBtn').show();
+      this.$find('#startBtn').show();
+      this._timer.pause();
+    },
+
+    '#stopBtn click': function stopBtn_click(context, $el) {
+      this._timer.stop();
+    },
+
+    '#resetBtn click': function resetBtn_click(context, $el) {
+      this.$find('#stopBtn').hide();
+      this.$find('#resetBtn').hide();
+      this.$find('#pauseBtn').hide();
+      this.$find('#startBtn').show();
+      $content.removeClass('warn danger');
+      this._timer.reset();
+    }
   };
-}($targetTime, $targetMsec, $content);
 
-var timerController = {
-  __name: 'ltimer.controller.timerController',
-  _timer: null,
-  __ready: function __ready(context) {
-    this._timer = require('./timer.js');
-    this._timer.timer.setRenderer(renderer);
-    this._timer.timer.setOnSecondCallback(onSecondCallback);
-    this._timer.timer.setOnStopCallback(onStopCallback);
-    this._timer.timer.setInterval(300000);
-  },
+  // ページの読み込みが終わったらコントローラをバインドする
+  $(function () {
+    h5.core.controller('#timer', timerController);
+  });
+})(jQuery);
 
-  _render: function _render(time, $target) {
-    $target.text(this._formatter.formatTimeString(time));
-  },
-
-  '#startBtn click': function startBtnClick(context, $el) {
-    this.$find('#startBtn').hide();
-    this.$find('#pauseBtn').show();
-    this.$find('#stopBtn').show();
-    this._timer.timer.start();
-  },
-
-  '#pauseBtn click': function pauseBtnClick(context, $el) {
-    this.$find('#pauseBtn').hide();
-    this.$find('#stopBtn').show();
-    this.$find('#startBtn').show();
-    this._timer.timer.pause();
-  },
-
-  '#stopBtn click': function stopBtnClick(context, $el) {
-    this.$find('#stopBtn').hide();
-    this.$find('#pauseBtn').hide();
-    this.$find('#startBtn').show();
-    this._timer.timer.stop();
-  }
-};
-
-// ページの読み込みが終わったらコントローラをバインドする
-$(function () {
-  h5.core.controller('#timer', timerController);
-});
-
-},{"./formatter.js":3,"./timer.js":5}]},{},[4]);
+},{"./formatter.js":3,"./timer.js":5}]},{},[3,4,5,6]);
