@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify -t babelify ./src/index.js -o ./dist/index.js"
+    "watch": "watchify -t babelify ./src/*.js -o ./dist/index.js"
   },
   "keywords": [],
   "author": "",
