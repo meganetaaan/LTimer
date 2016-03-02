@@ -48,32 +48,32 @@
       this._timer.setRenderer(renderer);
       this._timer.setOnSecondCallback(onSecondCallback);
       this._timer.setOnStopCallback(onStopCallback);
-      this._timer.reset(31000);
+      this._timer.reset(300000);
     },
 
     _render: function(time, $target){
       $target.text(this._formatter.formatTimeString(time));
     },
 
-    '#startBtn _click': function(context, $el) {
+    '#startBtn click': function(context, $el) {
       this.$find('#startBtn').hide();
       this.$find('#pauseBtn').show();
       this.$find('#stopBtn').show();
       this._timer.start();
     },
 
-    '#pauseBtn _click': function(context, $el) {
+    '#pauseBtn click': function(context, $el) {
       this.$find('#pauseBtn').hide();
       this.$find('#stopBtn').show();
       this.$find('#startBtn').show();
       this._timer.pause();
     },
 
-    '#stopBtn _click': function(context, $el) {
+    '#stopBtn click': function(context, $el) {
       this._timer.stop();
     },
 
-    '#resetBtn _click': function(context, $el) {
+    '#resetBtn click': function(context, $el) {
       this.$find('#stopBtn').hide();
       this.$find('#resetBtn').hide();
       this.$find('#pauseBtn').hide();

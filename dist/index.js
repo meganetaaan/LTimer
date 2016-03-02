@@ -12222,8 +12222,6 @@ if(h5.settings.scene.autoInit){init();}}); // =============================
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"/Users/ishikawa/Works/webapps/ltimer/node_modules/jquery/dist/jquery.js":2}],2:[function(require,module,exports){
-(function (global){
-; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/
@@ -22056,11 +22054,6 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-; browserify_shim__define__module__export__(typeof jQuery != "undefined" ? jQuery : window.jQuery);
-
-}).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -22247,32 +22240,32 @@ require('./timerController');
       this._timer.setRenderer(renderer);
       this._timer.setOnSecondCallback(onSecondCallback);
       this._timer.setOnStopCallback(onStopCallback);
-      this._timer.reset(31000);
+      this._timer.reset(300000);
     },
 
     _render: function _render(time, $target) {
       $target.text(this._formatter.formatTimeString(time));
     },
 
-    '#startBtn _click': function startBtn_click(context, $el) {
+    '#startBtn click': function startBtnClick(context, $el) {
       this.$find('#startBtn').hide();
       this.$find('#pauseBtn').show();
       this.$find('#stopBtn').show();
       this._timer.start();
     },
 
-    '#pauseBtn _click': function pauseBtn_click(context, $el) {
+    '#pauseBtn click': function pauseBtnClick(context, $el) {
       this.$find('#pauseBtn').hide();
       this.$find('#stopBtn').show();
       this.$find('#startBtn').show();
       this._timer.pause();
     },
 
-    '#stopBtn _click': function stopBtn_click(context, $el) {
+    '#stopBtn click': function stopBtnClick(context, $el) {
       this._timer.stop();
     },
 
-    '#resetBtn _click': function resetBtn_click(context, $el) {
+    '#resetBtn click': function resetBtnClick(context, $el) {
       this.$find('#stopBtn').hide();
       this.$find('#resetBtn').hide();
       this.$find('#pauseBtn').hide();
