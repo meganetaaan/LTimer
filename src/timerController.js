@@ -29,18 +29,20 @@
     return {
       load : () => {
         for(let i = 0; i < n; i++){
-          sounds[i].load();
+          if(sounds[i].readyState < 3){
+            sounds[i].load();
+          }
         }
       },
       play : () => {
         sounds[index].pause();
-        sounds[index].currentTime = 0.3;
+        sounds[index].currentTime = 0.0;
         sounds[index].play();
         index = (index + 1) % n;
       }
     }
   }
-  const sound = createMultiSound('./src/res/sound/gong.mp3', 5);
+  const sound = createMultiSound('./src/res/sound/gong.mp3', 3);
 
   const onStartCallback = (function($content){
     $content.removeClass('warn danger');
@@ -128,38 +130,5 @@
       $content.removeClass('warn danger');
       this._timer.reset();
     };
-
-    /*
-    '#startBtn click': function(context, $el) {
-      //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
-      sound.load();
-      this.$find('#startBtn').hide();
-      this.$find('#pauseBtn').show();
-      this.$find('#stopBtn').show();
-      this._timer.start();
-    },
-
-    '#pauseBtn click': function(context, $el) {
-      this.$find('#pauseBtn').hide();
-      this.$find('#stopBtn').show();
-      this.$find('#startBtn').show();
-      this._timer.pause();
-    },
-
-    '#stopBtn click': function(context, $el) {
-      //sound.play();
-      this._timer.stop();
-    },
-
-    '#resetBtn click': function(context, $el) {
-      this.$find('#stopBtn').hide();
-      this.$find('#resetBtn').hide();
-      this.$find('#pauseBtn').hide();
-      this.$find('#startBtn').show();
-      $content.removeClass('warn danger');
-      this._timer.reset();
-    }
-  }
-  */
   module.exports = timerController; 
 })(jQuery);
