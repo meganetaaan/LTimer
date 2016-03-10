@@ -22279,8 +22279,7 @@ jQuery(function () {
       this._timer.setRenderer(renderer);
       this._timer.setOnSecondCallback(onSecondCallback);
       this._timer.setOnStopCallback(onStopCallback);
-      //this._timer.reset(300000);
-      this._timer.reset(30000);
+      this._timer.reset(300000);
     },
 
     _render: function _render(time, $target) {
