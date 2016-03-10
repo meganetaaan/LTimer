@@ -12222,6 +12222,8 @@ if(h5.settings.scene.autoInit){init();}}); // =============================
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"/Users/ishikawa/Works/webapps/ltimer/node_modules/jquery/dist/jquery.js":2}],2:[function(require,module,exports){
+(function (global){
+; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*!
  * jQuery JavaScript Library v2.2.1
  * http://jquery.com/
@@ -22054,6 +22056,11 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
+; browserify_shim__define__module__export__(typeof jQuery != "undefined" ? jQuery : window.jQuery);
+
+}).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -22080,11 +22087,16 @@ exports.formatMsecString = formatMsecString;
 'use strict';
 
 var jQuery = require('jquery');
-var h5 = require('../lib/hifive/h5.dev.js');
-var timer = require('./timer');
-require('./timerController');
+//const h5 = require('../lib/hifive/h5.dev.js');
+require('../lib/hifive/h5.dev.js');
+//const timer = require('./timer');
+var timerController = require('./timerController');
+// ページの読み込みが終わったらコントローラをバインドする
+jQuery(function () {
+  h5.core.controller('#timer', timerController);
+});
 
-},{"../lib/hifive/h5.dev.js":1,"./timer":5,"./timerController":6,"jquery":2}],5:[function(require,module,exports){
+},{"../lib/hifive/h5.dev.js":1,"./timerController":6,"jquery":2}],5:[function(require,module,exports){
 'use strict';
 
 (function () {
@@ -22210,9 +22222,33 @@ require('./timerController');
     }
   };
 
+  var createMultiSound = function createMultiSound(source, n) {
+    var index = 0;
+    var sounds = Array(n);
+    for (var i = 0; i < n; i++) {
+      sounds[i] = new Audio(source);
+      sounds[i].load();
+    }
+    return {
+      load: function load() {
+        for (var i = 0; i < n; i++) {
+          sounds[i].load();
+        }
+      },
+      play: function play() {
+        sounds[index].pause();
+        sounds[index].currentTime = 0.3;
+        sounds[index].play();
+        index = (index + 1) % n;
+      }
+    };
+  };
+  var sound = createMultiSound('./src/res/sound/gong.mp3', 5);
+
   var onStartCallback = function ($content) {
     $content.removeClass('warn danger');
   }($content);
+
   var onSecondCallback = function ($con) {
     return function (time) {
       if (time <= 15) {
@@ -22222,15 +22258,16 @@ require('./timerController');
       }
     };
   }($content);
-  var onStopCallback = function ($time, $msec) {
+  var onStopCallback = function ($time, $msec, sound) {
     return function () {
       $('#resetBtn').show();
       $('#pauseBtn').hide();
       $('#startBtn').hide();
       $msec.empty();
-      $time.text('DONE!');
+      $time.text('DONE');
+      sound.play();
     };
-  }($targetTime, $targetMsec, $content);
+  }($targetTime, $targetMsec, sound);
 
   var timerController = {
     __name: 'ltimer.controller.timerController',
@@ -22240,45 +22277,91 @@ require('./timerController');
       this._timer.setRenderer(renderer);
       this._timer.setOnSecondCallback(onSecondCallback);
       this._timer.setOnStopCallback(onStopCallback);
-      this._timer.reset(300000);
+      //this._timer.reset(300000);
+      this._timer.reset(30000);
     },
 
     _render: function _render(time, $target) {
       $target.text(this._formatter.formatTimeString(time));
-    },
-
-    '#startBtn click': function startBtnClick(context, $el) {
-      this.$find('#startBtn').hide();
-      this.$find('#pauseBtn').show();
-      this.$find('#stopBtn').show();
-      this._timer.start();
-    },
-
-    '#pauseBtn click': function pauseBtnClick(context, $el) {
-      this.$find('#pauseBtn').hide();
-      this.$find('#stopBtn').show();
-      this.$find('#startBtn').show();
-      this._timer.pause();
-    },
-
-    '#stopBtn click': function stopBtnClick(context, $el) {
-      this._timer.stop();
-    },
-
-    '#resetBtn click': function resetBtnClick(context, $el) {
-      this.$find('#stopBtn').hide();
-      this.$find('#resetBtn').hide();
-      this.$find('#pauseBtn').hide();
-      this.$find('#startBtn').show();
-      $content.removeClass('warn danger');
-      this._timer.reset();
     }
   };
 
-  // ページの読み込みが終わったらコントローラをバインドする
-  $(function () {
-    h5.core.controller('#timer', timerController);
-  });
+  /**
+   * touch-action(または-ms-touch-action)プロパティがサポートされているか
+   */
+  var isTouchActionSupported = function () {
+    // divを作って、styleにtouchActionまたはmsTouchActionがあるか判定する
+    // いずれかがあった場合にtouchActionPropを設定して、trueを返す
+    var div = document.createElement('div');
+    if (typeof div.style.touchAction !== 'undefined') {
+      return true;
+    } else if (typeof div.style.msTouchAction !== 'undefined') {
+      return true;
+    }
+    return false;
+  }();
+
+  var clickAction = isTouchActionSupported ? 'click' : 'touchend';
+  timerController['#startBtn ' + clickAction] = function (context, $el) {
+    //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
+    sound.load();
+    this.$find('#startBtn').hide();
+    this.$find('#pauseBtn').show();
+    this.$find('#stopBtn').show();
+    this._timer.start();
+  };
+
+  timerController['#pauseBtn ' + clickAction] = function (context, $el) {
+    this.$find('#pauseBtn').hide();
+    this.$find('#stopBtn').show();
+    this.$find('#startBtn').show();
+    this._timer.pause();
+  };
+
+  timerController['#stopBtn ' + clickAction] = function (context, $el) {
+    //sound.play();
+    this._timer.stop();
+  };
+
+  timerController['#resetBtn ' + clickAction] = function (context, $el) {
+    this.$find('#stopBtn').hide();
+    this.$find('#resetBtn').hide();
+    this.$find('#pauseBtn').hide();
+    this.$find('#startBtn').show();
+    $content.removeClass('warn danger');
+    this._timer.reset();
+  };
+
+  /*
+  '#startBtn click': function(context, $el) {
+    //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
+    sound.load();
+    this.$find('#startBtn').hide();
+    this.$find('#pauseBtn').show();
+    this.$find('#stopBtn').show();
+    this._timer.start();
+  },
+   '#pauseBtn click': function(context, $el) {
+    this.$find('#pauseBtn').hide();
+    this.$find('#stopBtn').show();
+    this.$find('#startBtn').show();
+    this._timer.pause();
+  },
+   '#stopBtn click': function(context, $el) {
+    //sound.play();
+    this._timer.stop();
+  },
+   '#resetBtn click': function(context, $el) {
+    this.$find('#stopBtn').hide();
+    this.$find('#resetBtn').hide();
+    this.$find('#pauseBtn').hide();
+    this.$find('#startBtn').show();
+    $content.removeClass('warn danger');
+    this._timer.reset();
+  }
+  }
+  */
+  module.exports = timerController;
 })(jQuery);
 
 },{"./formatter.js":3,"./timer.js":5}]},{},[3,4,5,6]);
