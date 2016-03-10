@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-escapelable=no, minimal-ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Pragma" content="no-cache">
@@ -12,6 +12,16 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.pink-light_green.min.css" />
     <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
     <style>
+body {
+  user-select: none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -khtml-user-select:none;
+  -webkit-user-drag:none; 
+  -khtml-user-drag:none; 
+  touch-callout: none;
+  -webkit-touch-callout: none;
+}
 .mdl-layout__content {
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   background-color: #FAFAFA;
