@@ -9,13 +9,13 @@
 
   const renderer = {
     formatter : require('./formatter.js'),
-    $targets: {
+    targets: {
       $time: $targetTime,
       $msec: $targetMsec,
     },
     render: function(time){
-      this.$targets.$time.text(this.formatter.formatTimeString(time));
-      this.$targets.$msec.text(this.formatter.formatMsecString(time));
+      this.targets.$time.text(this.formatter.formatTimeString(time));
+      this.targets.$msec.text(this.formatter.formatMsecString(time));
     }
   };
 
@@ -81,7 +81,9 @@
 
     _render: function(time, $target){
       $target.text(this._formatter.formatTimeString(time));
-    }
+    },
+
+    /* event handler */
   };
 
   /**
