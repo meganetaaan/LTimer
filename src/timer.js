@@ -51,6 +51,7 @@
     startTime = Date.now();
     lastStatus = startTime;
     timeout = nextFrame(loop, 0);
+    onStartCallback();
     return status;
   }
 
@@ -92,6 +93,7 @@
     setRenderer,
     setRenderCallback,
     setOnStopCallback,
-    setOnSecondCallback
+    setOnSecondCallback,
+    setOnStartCallback
   };
 })();

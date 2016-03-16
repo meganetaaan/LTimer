@@ -1,22 +1,25 @@
 (function($){
   /* global h5, window */
   'use strict';
-  // TODO: jQueryオブジェクトのキャッシュを集約する(コントローラ内が望ましい？）
-  const $targetTime = $('#time');
-  const $targetMsec = $('#time-millis');
-  const $content = $('.page-content');
 
+  const TIMER_STATUS = {
+    READY: 'READY',
+    RUNNING: 'RUNNING',
+    PAUSED: 'PAUSED',
+    DONE: 'DONE'
+  };
+  const ATTR_DATA_STATUS = 'data-status';
+  const DEFAULT_SOUND_FILE_PATH = './src/res/sound/gong.mp3';
+  const DEFAULT_SOUND_NUM = 3;
 
-  const renderer = {
-    formatter : require('./formatter.js'),
-    targets: {
-      $time: $targetTime,
-      $msec: $targetMsec,
-    },
-    render: function(time){
-      this.targets.$time.text(this.formatter.formatTimeString(time));
-      this.targets.$msec.text(this.formatter.formatMsecString(time));
-    }
+  const createRenderer = function(targets){
+    return {
+      formatter : require('./formatter.js'),
+      render: function(time){
+        targets.$time.text(this.formatter.formatTimeString(time));
+        targets.$msec.text(this.formatter.formatMsecString(time));
+      }
+    };
   };
 
   const createMultiSound = function(source, n){
@@ -42,48 +45,64 @@
       }
     }
   }
-  const sound = createMultiSound('./src/res/sound/gong.mp3', 3);
-
-  const onStartCallback = (function($content){
-    $content.removeClass('warn danger');
-  })($content)
-
-  const onSecondCallback = (function($con){
-    return function(time){
-      if(time <= 15){
-        $con.removeClass('warn danger').addClass('danger');
-      } else if(time <= 30){
-        $con.removeClass('warn danger').addClass('warn');
-      }
-    }
-  })($content)
-  const onStopCallback = (function($time, $msec, sound){
-    return function(){
-      $('#resetBtn').show();
-      $('#pauseBtn').hide();
-      $('#startBtn').hide();
-      $msec.empty();
-      $time.text('DONE');
-      sound.play();
-    }
-  })($targetTime, $targetMsec, sound)
 
   const timerController = {
     __name: 'ltimer.controller.timerController',
     _timer: null,
+    _timerElement: null,
+    _renderer: null,
+    _$content: null,
     __ready: function(context){
+      this._sound = createMultiSound(DEFAULT_SOUND_FILE_PATH, DEFAULT_SOUND_NUM);
+      this._timerElement = this.rootElement;
+      this._targets = {
+        $time : this.$find('#time'),
+        $msec : this.$find('#time-millis')
+      }
+      this._$content = $('.page-content');
+
       this._timer = require('./timer.js');
-      this._timer.setRenderer(renderer);
+
+      this._renderer = createRenderer(this._targets);
+      this._timer.setRenderer(this._renderer);
+
+      const onStartCallback = (function($content){
+        $content.removeClass('warn danger');
+      })(this._$content, this._timerElement);
+      this._timer.setOnStartCallback(onStartCallback);
+
+      const onSecondCallback = (function($content){
+        return function(time){
+          if(time <= 15){
+            $content.removeClass('warn danger').addClass('danger');
+          } else if(time <= 30){
+            $content.removeClass('warn danger').addClass('warn');
+          }
+        }
+      })(this._$content)
       this._timer.setOnSecondCallback(onSecondCallback);
+
+      const onStopCallback = (function(targets, sound, stateElement){
+        return function(){
+          targets.$msec.empty();
+          targets.$time.text('DONE');
+          sound.play();
+          stateElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.DONE);
+        }
+      })(this._targets, this._sound, this._timerElement)
       this._timer.setOnStopCallback(onStopCallback);
+
+      this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.READY);
       this._timer.reset(300000);
     },
 
-    _render: function(time, $target){
-      $target.text(this._formatter.formatTimeString(time));
-    },
-
     /* event handler */
+    '#setTimeBtn click': function(context, $el){
+      var timeStr = this.$find('#timeInput').val();
+      var timeArr = timeStr.split(':');
+      var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
+      this._timer.reset(time);
+    }
   };
 
   /**
@@ -101,35 +120,28 @@
     return false;
   })();
 
+  // スマートデバイスでの反応速度向上のためにクリックではなくタッチを使う
   const clickAction = isTouchActionSupported ? 'click' : 'touchend';
   timerController[`#startBtn ${clickAction}`] = function(context, $el) {
     //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
-    sound.load();
-    this.$find('#startBtn').hide();
-    this.$find('#pauseBtn').show();
-    this.$find('#stopBtn').show();
+    this._sound.load();
+    this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.RUNNING);
     this._timer.start();
   };
 
   timerController[`#pauseBtn ${clickAction}`] = function(context, $el) {
-    this.$find('#pauseBtn').hide();
-    this.$find('#stopBtn').show();
-    this.$find('#startBtn').show();
+    this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.PAUSED);
     this._timer.pause();
   };
 
   timerController[`#stopBtn ${clickAction}`] = function(context, $el) {
-    //sound.play();
     this._timer.stop();
   };
 
   timerController[`#resetBtn ${clickAction}`] = function(context, $el) {
-      this.$find('#stopBtn').hide();
-      this.$find('#resetBtn').hide();
-      this.$find('#pauseBtn').hide();
-      this.$find('#startBtn').show();
-      $content.removeClass('warn danger');
-      this._timer.reset();
-    };
+    this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.READY);
+    this._$content.removeClass('warn danger');
+    this._timer.reset();
+  };
   module.exports = timerController; 
 })(jQuery);
