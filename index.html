@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.pink-light_green.min.css" />
     <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
-    <style>
+<style>
 body {
   user-select: none;
   -webkit-user-select:none;
@@ -58,21 +58,18 @@ body {
   bottom: 5%;
 }
 #pauseBtn {
-  display: none;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   bottom: 5%;
 }
 #resetBtn {
-  display: none;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   bottom: 5%;
 }
 #stopBtn{
-  display: none;
   position: absolute;
   left: calc(50% + 60px);
   transform: translateX(-50%);
@@ -80,6 +77,34 @@ body {
   animation-duration: 0.2s;
   animation-name: zoomin;
 }
+#timer[data-status="READY"] #pauseBtn{
+  display: none;
+}
+#timer[data-status="READY"] #resetBtn{
+  display: none;
+}
+#timer[data-status="READY"] #stopBtn{
+  display: none;
+}
+#timer[data-status="RUNNING"] #startBtn{
+  display: none;
+}
+#timer[data-status="RUNNING"] #resetBtn{
+  display: none;
+}
+#timer[data-status="PAUSED"] #pauseBtn{
+  display: none;
+}
+#timer[data-status="PAUSED"] #resetBtn{
+  display: none;
+}
+#timer[data-status="DONE"] #startBtn{
+  display: none;
+}
+#timer[data-status="DONE"] #pauseBtn{
+  display: none;
+}
+
 .page-content{
   position: absolute;
   background-color: #424242;
@@ -125,6 +150,15 @@ body {
           <span id="time-millis">.000</span>
           </span>
           </div>
+          <div class="timeForm">
+            <input type="time" id="timeInput" list="times" />
+            <datalist id="times">
+              <option label="5 minutes">05:00</option>
+              <option label="3 minutes">03:00</option>
+              <option label="1 minutes">01:00</option>
+              <option label="30 seconds">00:30</option>
+            </datalist>
+            <input type="button" id='setTimeBtn' value="set">
           <button id="startBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
             <i class="material-icons">&#xE037;</i>
           </button>
@@ -137,6 +171,7 @@ body {
           <button id="stopBtn" class="mdl-button mdl-js-button mdl-button--mini-fab mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color-accent">
             <i class="material-icons">&#xE047;</i>
           </button>
+          </div>
         </div>
       </div>
       </main>
