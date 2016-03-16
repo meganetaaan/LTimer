@@ -96,12 +96,19 @@
       this._timer.reset(300000);
     },
 
+    /* private method */
+    _resetTimer: function(time){
+      this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.READY);
+      this._$content.removeClass('warn danger');
+      this._timer.reset(time);
+    },
+
     /* event handler */
     '#setTimeBtn click': function(context, $el){
       var timeStr = this.$find('#timeInput').val();
       var timeArr = timeStr.split(':');
       var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
-      this._timer.reset(time);
+      this._resetTimer(time);
     }
   };
 
@@ -139,9 +146,7 @@
   };
 
   timerController[`#resetBtn ${clickAction}`] = function(context, $el) {
-    this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.READY);
-    this._$content.removeClass('warn danger');
-    this._timer.reset();
+    this._resetTimer();
   };
   module.exports = timerController; 
 })(jQuery);
