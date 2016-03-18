@@ -22201,11 +22201,18 @@ jQuery(function () {
 })();
 
 },{}],6:[function(require,module,exports){
-'use strict';
+"use strict";
 
 (function ($) {
   /* global h5, window */
   'use strict';
+
+  var userAgent = function (u) {
+    return {
+      Tablet: u.indexOf("windows") != -1 && u.indexOf("touch") != -1 && u.indexOf("tablet pc") == -1 || u.indexOf("ipad") != -1 || u.indexOf("android") != -1 && u.indexOf("mobile") == -1 || u.indexOf("firefox") != -1 && u.indexOf("tablet") != -1 || u.indexOf("kindle") != -1 || u.indexOf("silk") != -1 || u.indexOf("playbook") != -1,
+      Mobile: u.indexOf("windows") != -1 && u.indexOf("phone") != -1 || u.indexOf("iphone") != -1 || u.indexOf("ipod") != -1 || u.indexOf("android") != -1 && u.indexOf("mobile") != -1 || u.indexOf("firefox") != -1 && u.indexOf("mobile") != -1 || u.indexOf("blackberry") != -1
+    };
+  }(window.navigator.userAgent.toLowerCase());
 
   var TIMER_STATUS = {
     READY: 'READY',
@@ -22306,53 +22313,40 @@ jQuery(function () {
       this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.READY);
       this._$content.removeClass('warn danger');
       this._timer.reset(time);
-    },
-
-    /* event handler */
-    '#setTimeBtn click': function setTimeBtnClick(context, $el) {
-      var timeStr = this.$find('#timeInput').val();
-      var timeArr = timeStr.split(':');
-      var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
-      this._resetTimer(time);
     }
+
   };
 
-  /**
-   * touch-action(または-ms-touch-action)プロパティがサポートされているか
-   */
-  var isTouchActionSupported = function () {
-    // divを作って、styleにtouchActionまたはmsTouchActionがあるか判定する
-    // いずれかがあった場合にtouchActionPropを設定して、trueを返す
-    var div = document.createElement('div');
-    if (typeof div.style.touchAction !== 'undefined') {
-      return true;
-    } else if (typeof div.style.msTouchAction !== 'undefined') {
-      return true;
-    }
-    return false;
-  }();
-
   // スマートデバイスでの反応速度向上のためにクリックではなくタッチを使う
-  var clickAction = isTouchActionSupported ? 'click' : 'touchend';
-  timerController['#startBtn ' + clickAction] = function (context, $el) {
+  /* event handler */
+  var clickAction = userAgent.Tablet || userAgent.Mobile ? 'touchend' : 'click';
+  timerController["#startBtn " + clickAction] = function (context, $el) {
     //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
     this._sound.load();
     this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.RUNNING);
     this._timer.start();
   };
 
-  timerController['#pauseBtn ' + clickAction] = function (context, $el) {
+  timerController["#pauseBtn " + clickAction] = function (context, $el) {
     this._timerElement.setAttribute(ATTR_DATA_STATUS, TIMER_STATUS.PAUSED);
     this._timer.pause();
   };
 
-  timerController['#stopBtn ' + clickAction] = function (context, $el) {
+  timerController["#stopBtn " + clickAction] = function (context, $el) {
     this._timer.stop();
   };
 
-  timerController['#resetBtn ' + clickAction] = function (context, $el) {
+  timerController["#resetBtn " + clickAction] = function (context, $el) {
     this._resetTimer();
   };
+
+  timerController["#setTimeBtn " + clickAction] = function (context, $el) {
+    var timeStr = this.$find('#timeInput').val();
+    var timeArr = timeStr.split(':');
+    var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
+    this._resetTimer(time);
+  };
+
   module.exports = timerController;
 })(jQuery);
 
