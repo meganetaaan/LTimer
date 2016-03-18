@@ -2,6 +2,23 @@
   /* global h5, window */
   'use strict';
 
+  var userAgent = (function(u){
+    return {
+      Tablet:(u.indexOf("windows") != -1 && u.indexOf("touch") != -1 && u.indexOf("tablet pc") == -1) 
+        || u.indexOf("ipad") != -1
+        || (u.indexOf("android") != -1 && u.indexOf("mobile") == -1)
+        || (u.indexOf("firefox") != -1 && u.indexOf("tablet") != -1)
+        || u.indexOf("kindle") != -1
+        || u.indexOf("silk") != -1
+        || u.indexOf("playbook") != -1,
+      Mobile:(u.indexOf("windows") != -1 && u.indexOf("phone") != -1)
+        || u.indexOf("iphone") != -1
+        || u.indexOf("ipod") != -1
+        || (u.indexOf("android") != -1 && u.indexOf("mobile") != -1)
+        || (u.indexOf("firefox") != -1 && u.indexOf("mobile") != -1)
+        || u.indexOf("blackberry") != -1
+  }})(window.navigator.userAgent.toLowerCase());
+
   const TIMER_STATUS = {
     READY: 'READY',
     RUNNING: 'RUNNING',
@@ -112,23 +129,8 @@
     }
   };
 
-  /**
-   * touch-action(または-ms-touch-action)プロパティがサポートされているか
-   */
-  const isTouchActionSupported = (function() {
-    // divを作って、styleにtouchActionまたはmsTouchActionがあるか判定する
-    // いずれかがあった場合にtouchActionPropを設定して、trueを返す
-    const div = document.createElement('div');
-    if (typeof div.style.touchAction !== 'undefined') {
-      return true;
-    } else if (typeof div.style.msTouchAction !== 'undefined') {
-      return true;
-    }
-    return false;
-  })();
-
   // スマートデバイスでの反応速度向上のためにクリックではなくタッチを使う
-  const clickAction = isTouchActionSupported ? 'click' : 'touchend';
+  const clickAction = userAgent.Tablet || userAgent.Mobile ? 'touchend' : 'click';
   timerController[`#startBtn ${clickAction}`] = function(context, $el) {
     //MEMO: iOSではクリックイベントのハンドラ内で明示的にloadする必要がある
     this._sound.load();
