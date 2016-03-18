@@ -121,12 +121,6 @@
     },
 
     /* event handler */
-    '#setTimeBtn click': function(context, $el){
-      var timeStr = this.$find('#timeInput').val();
-      var timeArr = timeStr.split(':');
-      var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
-      this._resetTimer(time);
-    }
   };
 
   // スマートデバイスでの反応速度向上のためにクリックではなくタッチを使う
@@ -150,5 +144,13 @@
   timerController[`#resetBtn ${clickAction}`] = function(context, $el) {
     this._resetTimer();
   };
+
+  timerController[`#setTimeBtn ${clickAction}`] = function(context, $el){
+      var timeStr = this.$find('#timeInput').val();
+      var timeArr = timeStr.split(':');
+      var time = (Number(timeArr[0]) * 60 + Number(timeArr[1])) * 1000;
+      this._resetTimer(time);
+  };
+
   module.exports = timerController; 
 })(jQuery);
