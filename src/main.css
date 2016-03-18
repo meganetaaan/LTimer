@@ -1,0 +1,130 @@
+body {
+  user-select: none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -khtml-user-select:none;
+  -webkit-user-drag:none; 
+  -khtml-user-drag:none; 
+  touch-callout: none;
+  -webkit-touch-callout: none;
+}
+.mdl-layout__content {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+#timeContainer {
+  position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+  left: 15vw;
+  height: 25vw;
+  width: 75vw;
+}
+#timeStr {
+  line-height: 25vw;
+}
+#time {
+  font-size: 25vw;
+} 
+#time-millis {
+  font-size: 5vw;
+}
+@keyframes zoomin {
+  from {
+    transform: translateX(-50%) scale(0) rotate(180deg);
+  }
+  to {
+    transform: translateX(-50%) scale(1) rotate(0deg);
+  }
+}
+#startBtn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
+#pauseBtn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
+#resetBtn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
+#stopBtn{
+  position: absolute;
+  left: calc(50% + 60px);
+  transform: translateX(-50%);
+  bottom: 5%;
+  animation-duration: 0.2s;
+  animation-name: zoomin;
+}
+#timeInput {
+  position: absolute;
+  left: calc(50% - 160px);
+  height: 32px;
+  font-size: 16px;
+  transform: translateX(-50%);
+  bottom: 5%;
+  animation-duration: 0.2s;
+  animation-name: zoomin;
+}
+#setTimeBtn {
+  position: absolute;
+  left: calc(50% - 70px);
+  transform: translateX(-50%);
+  bottom: 5%;
+  animation-duration: 0.2s;
+  animation-name: zoomin;
+}
+#timer[data-status="READY"] #pauseBtn{
+  display: none;
+}
+#timer[data-status="READY"] #resetBtn{
+  display: none;
+}
+#timer[data-status="READY"] #stopBtn{
+  display: none;
+}
+#timer[data-status="RUNNING"] #startBtn{
+  display: none;
+}
+#timer[data-status="RUNNING"] #resetBtn{
+  display: none;
+}
+#timer[data-status="RUNNING"] #timeInput{
+  display: none;
+}
+#timer[data-status="RUNNING"] #setTimeBtn{
+  display: none;
+}
+#timer[data-status="PAUSED"] #pauseBtn{
+  display: none;
+}
+#timer[data-status="PAUSED"] #resetBtn{
+  display: none;
+}
+#timer[data-status="DONE"] #startBtn{
+  display: none;
+}
+#timer[data-status="DONE"] #pauseBtn{
+  display: none;
+}
+
+.page-content{
+  position: absolute;
+  /*background-color: #FAFAFA;*/
+  background-color: #424242;
+  color: #FAFAFA;
+  width: 100%;
+  height: 100%;
+}
+.page-content.warn {
+  background-color: #FFA000;
+}
+.page-content.danger {
+  background-color: #FF5722;
+}
